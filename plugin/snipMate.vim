@@ -122,15 +122,20 @@ endf
 
 let g:did_ft = {}
 fun! GetSnippets(dir, filetypes)
-	for ft in split(a:filetypes, '\.')
-		if has_key(g:did_ft, ft) | continue | endif
-		call s:DefineSnips(a:dir, ft, ft)
-		if ft == 'objc' || ft == 'cpp' || ft == 'cs'
-			call s:DefineSnips(a:dir, 'c', ft)
-		elseif ft == 'xhtml'
-			call s:DefineSnips(a:dir, 'html', 'xhtml')
-		endif
-		let g:did_ft[ft] = 1
+	for snip_dir in split( a:dir, ',' )
+		for ft in split(a:filetypes, '\.')
+			if has_key(g:did_ft, snip_dir . ft) | continue | endif
+			
+			call s:DefineSnips(snip_dir, ft, ft)
+
+			if ft == 'objc' || ft == 'cpp' || ft == 'cs'
+				call s:DefineSnips(snip_dir, 'c', ft)
+			elseif ft == 'xhtml'
+				call s:DefineSnips(snip_dir, 'html', 'xhtml')
+			endif
+
+			let g:did_ft[ snip_dir . ft ] = 1
+		endfor
 	endfor
 endf
 
