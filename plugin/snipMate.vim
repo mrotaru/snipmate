@@ -26,14 +26,15 @@ endif
 
 fun! MakeSnip(scope, trigger, content, ...)
 	let multisnip = a:0 && a:1 != ''
+"    echom 'MakeSnip called: scope=' . a:scope . ',trigger=' . a:trigger . ', content='.a:content . ', multisnip=' . multisnip
 	let var = multisnip ? 's:multi_snips' : 's:snippets'
 	if !has_key({var}, a:scope) | let {var}[a:scope] = {} | endif
 	if !has_key({var}[a:scope], a:trigger)
 		let {var}[a:scope][a:trigger] = multisnip ? [[a:1, a:content]] : a:content
 	elseif multisnip | let {var}[a:scope][a:trigger] += [[a:1, a:content]]
 	else
-		echom 'Warning in snipMate.vim: Snippet '.a:trigger.' is already defined.'
-				\ .' See :h multi_snip for help on snippets with multiple matches.'
+		echom 'Warning in snipMate.vim: Overriding snippet '.a:trigger.'.'
+		let {var}[a:scope][a:trigger] = multisnip ? [[a:1, a:content]] : a:content
 	endif
 endf
 
